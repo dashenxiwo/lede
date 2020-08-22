@@ -46,8 +46,8 @@ ucidef_set_interface() {
 
 	if ! json_is_a protocol string; then
 		case "$network" in
-			lan) json_add_string protocol static ;;
 			wan) json_add_string protocol dhcp ;;
+			lan) json_add_string protocol static ;;
 			*) json_add_string protocol none ;;
 		esac
 	fi
@@ -68,20 +68,22 @@ ucidef_set_model_name() {
 	json_select ..
 }
 
-ucidef_set_interface_lan() {
-	ucidef_set_interface "lan" ifname "$1" protocol "${2:-static}"
-}
 
 ucidef_set_interface_wan() {
 	ucidef_set_interface "wan" ifname "$1" protocol "${2:-dhcp}"
 }
 
-ucidef_set_interfaces_lan_wan() {
-	local lan_if="$1"
-	local wan_if="$2"
+ucidef_set_interface_lan() {
+	ucidef_set_interface "lan" ifname "$1" protocol "${2:-static}"
+}
 
-	ucidef_set_interface_lan "$lan_if"
+ucidef_set_interfaces_lan_wan() {
+	local wan_if="$1"
+	local lan_if="$2"
+	
 	ucidef_set_interface_wan "$wan_if"
+	ucidef_set_interface_lan "$lan_if"
+
 }
 
 _ucidef_add_switch_port() {
